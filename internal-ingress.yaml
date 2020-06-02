@@ -1,0 +1,17 @@
+controller:
+  nodeSelector:
+    beta.kubernetes.io/os: "linux"
+  replicaCount: 2
+  service:
+    loadBalancerIP: 172.23.8.100
+    annotations:
+      service.beta.kubernetes.io/azure-load-balancer-internal: "true"
+  autoscaling:
+    enabled: true
+    minReplicas: 2
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    targetMemoryUtilizationPercentage: 80
+  defaultBackend:
+    nodeSelector:
+      beta.kubernetes.io/os: "linux"
