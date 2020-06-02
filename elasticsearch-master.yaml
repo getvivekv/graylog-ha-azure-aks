@@ -1,0 +1,21 @@
+---
+clusterName: "elasticsearch"
+imageTag: 6.8.9
+nodeGroup: "master"
+roles:
+  master: "true"
+  ingest: "false"
+  data: "false"
+replicas: 3
+esJavaOpts: "-Xmx3g -Xms3g"
+resources:
+  requests:
+    cpu: "500m"
+    memory: "3Gi"
+  limits:
+    cpu: "2000m"
+    memory: "8Gi"
+volumeClaimTemplate:
+  resources:
+    requests:
+      storage: 4Gi

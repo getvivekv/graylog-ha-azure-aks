@@ -1,0 +1,64 @@
+graylog:
+  metadataLabels:
+  image:
+    repository: "graylog/graylog:3.3"
+    pullPolicy: "IfNotPresent"
+  replicas: 2
+  persistence:
+    enabled: true
+    accessMode: ReadWriteOnce
+    size: "10Gi"
+  input:
+    udp:
+      service:
+        type: NodePort
+      ports:
+        - name: getlf-30010-udp
+          port: 30010
+          nodePort: 30010
+  service:
+    annotations:
+    type: ClusterIP
+    port: 9000
+  ingress:
+    annotations:
+      kubernetes.io/ingress.class: nginx-internal
+    enabled: true
+    hosts:
+      - graylog-nonprod.tdebusiness.cloud
+    tls:
+      - secretName: tdebusiness-ssl
+        hosts:
+          - graylog-nonprod.tdebusiness.cloud
+  resources:
+    limits:
+      cpu: "1"
+    requests:
+      cpu: "100m"
+      memory: "1Gi"
+  geoip:
+    enabled: true
+
+  ## Set Graylog Java heapsize. If this value empty, chart will allocate heapsize using `-XX:+UseCGroupMemoryLimitForHeap`
+  ## ref: https://blogs.oracle.com/java-platform-group/java-se-support-for-docker-cpu-and-memory-limits
+  ##
+  # heapSize: "1024g"
+
+  ## Additional graylog config which is defined on `graylog.conf`.
+  ## You can find a complete list of graylog config from http://docs.graylog.org/en/3.0/pages/configuration/server.conf.html
+  ## Graylog config is written in Java properites format. Make sure you write it correctly.
+  ##
+  # config: |
+  #   elasticsearch_connect_timeout = 10s
+  #   elasticsearch_socket_timeout = 60s
+  #   elasticsearch_idle_timeout = -1s
+
+  journal:
+    deleteBeforeStart: true
+
+  ## Additional server files will be deployed to /etc/graylog/server
+  ## For example, you can put server certificates or authorized clients certificates here
+  ##
+  serverFiles:
+     server.key: |
+     server.cert: |
